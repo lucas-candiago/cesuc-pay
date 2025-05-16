@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# 💸 Cesuc Pay
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Cesuc Pay** é um aplicativo de controle financeiro pessoal desenvolvido com **React Native** e **Expo**. Seu objetivo é ajudar usuários a organizarem e visualizarem suas finanças de maneira simples e eficiente.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Tecnologias utilizadas
 
-   ```bash
-   npm install
-   ```
+- React Native
+- Expo
+- TypeScript
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 📲 Como rodar o projeto no seu celular
 
-In the output, you'll find options to open the app in a
+Este projeto utiliza o **Expo**, que permite rodar o app diretamente no seu celular **Android** ou **iOS**, sem necessidade de emuladores.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### ✅ Pré-requisitos
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Node.js (versão recomendada: 18+)
+- Git
+- Acesso à internet e à mesma rede Wi-Fi do seu celular
+- Aplicativo **Expo Go** instalado no seu celular:
+  - [Expo Go para Android](https://play.google.com/store/apps/details?id=host.exp.exponent)
+  - [Expo Go para iOS](https://apps.apple.com/app/expo-go/id982107779)
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🛠️ Passo a passo para rodar o app
+
+### 1. Clone o repositório
 
 ```bash
-npm run reset-project
+git clone https://github.com/lucas-candiago/cesuc-pay.git
+cd cesuc-pay
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instale as dependências
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Inicie o servidor do Expo
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm start
+```
 
-## Join the community
+Isso abrirá uma aba no navegador e mostrará um QR Code no terminal ou na aba web.
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📱 Executando no seu celular
+
+1. Conecte seu celular **na mesma rede Wi-Fi** que seu computador.
+2. Abra o aplicativo **Expo Go** no seu celular.
+3. Escaneie o QR Code exibido no terminal ou no navegador.
+4. O app **Cesuc Pay** será carregado automaticamente no seu dispositivo.
+
+---
+
+## 🧠 Dicas úteis
+
+- Pressione **`i`** no terminal para tentar abrir diretamente no iPhone (apenas no macOS com simulador).
+- Pressione **`a`** para abrir no Android Studio (com emulador Android).
+- Pressione **`d`** para abrir o menu de opções do Expo CLI (modo LAN, Tunnel, etc).
+- Se o QR Code não funcionar, troque o modo de conexão para `Tunnel`, que costuma ser mais confiável em redes restritas.
+
+---
+
+## 🧾 Licença
+
+Este projeto é de uso acadêmico e foi desenvolvido para fins educacionais.
+
+---
