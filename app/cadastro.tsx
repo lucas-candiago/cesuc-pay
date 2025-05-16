@@ -1,4 +1,3 @@
-// app/login.tsx
 import {
   View,
   Text,
@@ -8,20 +7,36 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 
-export default function LoginScreen () {
+export default function CadastroScreen () {
   const router = useRouter()
 
   return (
     <View style={styles.container}>
-      <Text style={styles.returnText} onPress={() => router.back()}>Voltar</Text>
+      <Text style={styles.returnText} onPress={() => router.back()}>
+        Voltar
+      </Text>
 
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Cadastre-se</Text>
+
+      <Text style={styles.label}>Seu nome</Text>
+      <TextInput
+        style={styles.input}
+        placeholder='Arthur Marques'
+        placeholderTextColor='#aaa'
+      />
 
       <Text style={styles.label}>CPF</Text>
       <TextInput
         style={styles.input}
         placeholder='000.000.000-00'
         keyboardType='numeric'
+        placeholderTextColor='#aaa'
+      />
+
+      <Text style={styles.label}>E-mail</Text>
+      <TextInput
+        style={styles.input}
+        placeholder='arthur@cs.cesuca.edu.br'
         placeholderTextColor='#aaa'
       />
 
@@ -33,19 +48,11 @@ export default function LoginScreen () {
         placeholderTextColor='#aaa'
       />
 
-      <TouchableOpacity onPress={() => alert('Recuperar senha')}>
-        <Text style={styles.forgot}>Esqueceu sua senha?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>Entrar</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.registerBtn}
-        onPress={() => router.push('/cadastro')}
+        onPress={() => router.push('/login')}
       >
-        <Text style={styles.registerText}>Cadastrar-se</Text>
+        <Text style={styles.registerText}>Cadastrar</Text>
       </TouchableOpacity>
     </View>
   )
@@ -61,7 +68,7 @@ const styles = StyleSheet.create({
   returnText: {
     fontSize: 16,
     textAlign: 'right',
-    marginBottom: 50,
+    marginBottom: 50
   },
   title: {
     fontSize: 36,
@@ -85,26 +92,16 @@ const styles = StyleSheet.create({
     color: '#2e5748',
     marginBottom: 32
   },
-  loginBtn: {
+  registerBtn: {
     backgroundColor: '#2e5748',
     padding: 16,
     borderRadius: 14,
     alignItems: 'center',
+    marginTop: 20,
     marginBottom: 16
   },
-  loginText: {
+  registerText: {
     color: '#fff',
     fontSize: 16
   },
-  registerBtn: {
-    borderWidth: 1,
-    borderColor: '#2e5748',
-    padding: 16,
-    borderRadius: 14,
-    alignItems: 'center'
-  },
-  registerText: {
-    color: '#2e5748',
-    fontSize: 16
-  }
 })
