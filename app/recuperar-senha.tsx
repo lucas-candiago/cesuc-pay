@@ -12,39 +12,34 @@ export default function LoginScreen () {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.returnText} onPress={() => router.back()}>Voltar</Text>
+      <Text style={styles.returnText} onPress={() => router.back()}>
+        Voltar
+      </Text>
 
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Recuperar senha</Text>
+      <Text style={styles.text}>
+        Enviaremos um e-mail com instruções de como redefinir sua senha.
+      </Text>
 
-      <Text style={styles.label}>CPF</Text>
+      <Text style={styles.label}>E-mail de recuperação:</Text>
       <TextInput
         style={styles.input}
-        placeholder='000.000.000-00'
-        keyboardType='numeric'
+        placeholder='arthur@cs.cesuca.edu.br'
         placeholderTextColor='#aaa'
       />
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        style={styles.input}
-        placeholder='************'
-        secureTextEntry
-        placeholderTextColor='#aaa'
-      />
-
-      <TouchableOpacity onPress={() => router.push('/recuperar-senha')}>
-        <Text style={styles.forgot}>Esqueceu sua senha?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>Entrar</Text>
+      <TouchableOpacity
+        style={styles.sendBtn}
+        onPress={() => router.push('/login')}
+      >
+        <Text style={styles.sendText}>Enviar email</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.registerBtn}
-        onPress={() => router.push('/cadastro')}
+        style={styles.returnBtn}
+        onPress={() => router.back()}
       >
-        <Text style={styles.registerText}>Cadastrar-se</Text>
+        <Text style={styles.returnText}>Voltar</Text>
       </TouchableOpacity>
     </View>
   )
@@ -57,15 +52,15 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 80
   },
-  returnText: {
-    fontSize: 16,
-    textAlign: 'right',
-    marginBottom: 50,
-  },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
-    marginBottom: 32
+    marginTop: 20,
+    marginBottom: 10
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 50
   },
   label: {
     fontSize: 16,
@@ -80,30 +75,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 16
   },
-  forgot: {
-    color: '#2e5748',
-    marginBottom: 32
-  },
-  loginBtn: {
+  sendBtn: {
     backgroundColor: '#2e5748',
     padding: 16,
     borderRadius: 14,
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
+    marginTop: 50,
   },
-  loginText: {
+  sendText: {
     color: '#fff',
     fontSize: 16
   },
-  registerBtn: {
+  returnBtn: {
     borderWidth: 1,
     borderColor: '#2e5748',
     padding: 16,
     borderRadius: 14,
     alignItems: 'center'
   },
-  registerText: {
+  returnText: {
     color: '#2e5748',
+    textAlign: 'right',
     fontSize: 16
   }
 })
