@@ -12,7 +12,9 @@ export default function LoginScreen () {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.returnText} onPress={() => router.back()}>Voltar</Text>
+      <Text style={styles.returnText} onPress={() => router.back()}>
+        Voltar
+      </Text>
 
       <Text style={styles.title}>Login</Text>
 
@@ -36,7 +38,7 @@ export default function LoginScreen () {
         <Text style={styles.forgot}>Esqueceu sua senha?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginBtn}>
+      <TouchableOpacity style={styles.loginBtn} onPress={() => router.push('/home')}>
         <Text style={styles.loginText}>Entrar</Text>
       </TouchableOpacity>
 
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
   returnText: {
     fontSize: 16,
     textAlign: 'right',
-    marginBottom: 50,
+    marginBottom: 50
   },
   title: {
     fontSize: 36,
