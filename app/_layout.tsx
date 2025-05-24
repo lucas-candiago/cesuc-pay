@@ -28,6 +28,14 @@ export default function RootLayout () {
       <Stack.Screen name='login' options={{ headerShown: false }} />
       <Stack.Screen name='cadastro' options={{ headerShown: false }} />
       <Stack.Screen name='recuperar-senha' options={{ headerShown: false }} />
+      <Stack.Screen
+        name='adicionar-registro'
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='editar-registro'
+        options={{ headerShown: false }}
+      />
     </Stack>
   )
 }

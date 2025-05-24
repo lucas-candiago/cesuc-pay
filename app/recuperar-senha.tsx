@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 
-export default function LoginScreen () {
+export default function ForgotScreen () {
   const router = useRouter()
 
   return (
