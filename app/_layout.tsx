@@ -37,6 +37,7 @@ export default function RootLayout () {
         name='editar-registro'
         options={{ headerShown: false }}
       />
+      <Stack.Screen name='ver-tudo' options={{ headerShown: false }} />
     </Stack>
   )
 }
