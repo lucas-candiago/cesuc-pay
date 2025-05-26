@@ -3,6 +3,9 @@
     "name": "cesuc-pay-app",
     "slug": "cesuc-pay-app",
     "version": "1.0.0",
+     "extra": {
+      "API_URL": "http://127.0.0.1:8000/"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "cesucpayapp",

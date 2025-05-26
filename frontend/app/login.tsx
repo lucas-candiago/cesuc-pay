@@ -6,9 +6,39 @@ import {
   StyleSheet
 } from 'react-native'
 import { useRouter } from 'expo-router'
+import AuthContext from './contexts/AuthContext'
+import { useContext } from 'react'
+import { useState } from 'react'
 
 export default function LoginScreen () {
   const router = useRouter()
+
+  const [cpf, setCPF] = useState('')
+  const [password, setPassword] = useState('')
+
+  const { login } = useContext(AuthContext)
+
+  const handleCPF = (text: string) => {
+    setCPF(text)
+  }
+
+  const handlePassword = (text: string) => {
+    setPassword(text)
+  }
+
+  const [loginErrorMsg, setLoginErrorMsg] = useState<string | undefined>(
+    undefined
+  )
+
+  const handleSubmit = () => {
+    const loginData = {
+      cpf,
+      password,
+      setErrorMsg: setLoginErrorMsg
+    }
+
+    login(loginData)
+  }
 
   return (
     <View style={styles.container}>
@@ -21,6 +51,8 @@ export default function LoginScreen () {
       <Text style={styles.label}>CPF</Text>
       <TextInput
         style={styles.input}
+        value={cpf}
+        onChangeText={handleCPF}
         placeholder='000.000.000-00'
         keyboardType='numeric'
         placeholderTextColor='#aaa'
@@ -29,6 +61,8 @@ export default function LoginScreen () {
       <Text style={styles.label}>Senha</Text>
       <TextInput
         style={styles.input}
+        value={password}
+        onChangeText={handlePassword}
         placeholder='************'
         secureTextEntry
         placeholderTextColor='#aaa'
@@ -38,7 +72,14 @@ export default function LoginScreen () {
         <Text style={styles.forgot}>Esqueceu sua senha?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginBtn} onPress={() => router.push('/home')}>
+      {loginErrorMsg && (
+        <Text style={{ color: 'red' }}>{loginErrorMsg}</Text>
+      )}
+
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={handleSubmit}
+      >
         <Text style={styles.loginText}>Entrar</Text>
       </TouchableOpacity>
 
