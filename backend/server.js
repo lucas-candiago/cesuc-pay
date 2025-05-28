@@ -15,4 +15,4 @@ app.use("/users", require("./routes/authRoutes"))
 app.use("/transactions", require("./routes/transactionRoutes"))
 
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
