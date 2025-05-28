@@ -10,9 +10,6 @@ const router = express.Router()
 router.post("/register", async (req, res) => {
     const { name, email, password, cpf } = req.body
 
-    console.log('request received')
-    console.log(name, email, password, CSSTransformComponent)
-
     try {
         const userExists = await User.findOne({ cpf })
         if (userExists) return res.status(400).json({ message: "CPF already registered" })
