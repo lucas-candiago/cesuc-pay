@@ -11,22 +11,20 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { Ionicons } from '@expo/vector-icons'
+import axiosAPI from './services/axios'
+import { categories } from './mocks/categories'
 
 export default function AddScreen () {
   const router = useRouter()
 
   const [description, setDescription] = useState('')
-  const [value, setValue] = useState('')
+  const [price, setPrice] = useState('')
   const [date, setDate] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
 
   const [openCategory, setOpenCategory] = useState(false)
   const [category, setCategory] = useState(null)
-  const [categoryItems, setCategoryItems] = useState([
-    { label: 'Roupas', value: 'roupas' },
-    { label: 'Comida', value: 'comida' },
-    { label: 'Transporte', value: 'transporte' }
-  ])
+  const [categoryItems, setCategoryItems] = useState(categories)
 
   const [openType, setOpenType] = useState(false)
   const [type, setType] = useState(null)
@@ -34,6 +32,20 @@ export default function AddScreen () {
     { label: 'Despesa', value: 'despesa' },
     { label: 'Receita', value: 'receita' }
   ])
+
+  const handleSubmit = async () => {
+    const res = await axiosAPI.post('transactions/add/', {
+      description,
+      type,
+      date,
+      category,
+      price
+    })
+
+    if (res.status == 201) {
+      router.push('/home')
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -112,18 +124,15 @@ export default function AddScreen () {
         placeholder='R$ 0,00'
         placeholderTextColor='#aaa'
         keyboardType='numeric'
-        value={value}
-        onChangeText={setValue}
+        value={price}
+        onChangeText={setPrice}
       />
 
-      <TouchableOpacity style={styles.createBtn}>
+      <TouchableOpacity style={styles.createBtn} onPress={handleSubmit}>
         <Text style={styles.createText}>Adicionar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.backBtn}
-        onPress={() => router.back()}
-      >
+      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
         <Text style={styles.backText}>Voltar</Text>
       </TouchableOpacity>
     </View>
