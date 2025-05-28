@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   Text,
@@ -8,18 +8,41 @@ import {
 } from 'react-native'
 import { Ionicons, Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { transactions } from './mocks/transactions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axiosAPI from './services/axios'
+import { normalizeDate, normalizeCurrency } from './utils/functions'
+import { Transaction } from './types'
+
+async function getUser () {
+  return await AsyncStorage.getItem('userName')
+}
 
 export default function App () {
   const router = useRouter()
 
-  const [selectedTab, setSelectedTab] = useState("Hoje")
+  const user = getUser()
+
+  const [selectedTab, setSelectedTab] = useState('Hoje')
+
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [total, setTotal] = useState(0)
+
+  useEffect(() => {
+    axiosAPI.get("transactions/all").then(res => {
+      let tot = 0
+      res.data.transactions.map((transaction: Transaction) => {
+        if (transaction.type == 'despesa') tot += Number(transaction.price)
+      })
+      setTransactions(res.data.transactions)
+      setTotal(tot)
+  })
+  }, [])
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Olá, Arthur</Text>
+          <Text style={styles.greeting}>Olá, {user}</Text>
           <Text style={styles.title}>Início</Text>
         </View>
         <TouchableOpacity style={styles.profileIcon}>
@@ -29,24 +52,67 @@ export default function App () {
 
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total Gasto</Text>
-        <Text style={styles.totalValue}>R$25.520,00</Text>
+        <Text style={styles.totalValue}>{normalizeCurrency(total)}</Text>
       </View>
 
       <View style={styles.tabsContainer}>
-        <TouchableOpacity onPress={() => setSelectedTab("Hoje")} style={selectedTab == "Hoje" ? [styles.tab, styles.tabActive] : styles.tab}>
-          <Text style={selectedTab == "Hoje" ? [styles.tabText, styles.tabTextActive] : styles.tabText}>Hoje</Text>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('Hoje')}
+          style={
+            selectedTab == 'Hoje' ? [styles.tab, styles.tabActive] : styles.tab
+          }
+        >
+          <Text
+            style={
+              selectedTab == 'Hoje'
+                ? [styles.tabText, styles.tabTextActive]
+                : styles.tabText
+            }
+          >
+            Hoje
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedTab("Semanal")} style={selectedTab == "Semanal" ? [styles.tab, styles.tabActive] : styles.tab}>
-          <Text style={selectedTab == "Semanal" ? [styles.tabText, styles.tabTextActive] : styles.tabText}>Semanal</Text>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('Semanal')}
+          style={
+            selectedTab == 'Semanal'
+              ? [styles.tab, styles.tabActive]
+              : styles.tab
+          }
+        >
+          <Text
+            style={
+              selectedTab == 'Semanal'
+                ? [styles.tabText, styles.tabTextActive]
+                : styles.tabText
+            }
+          >
+            Semanal
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedTab("Mensal")} style={selectedTab == "Mensal" ? [styles.tab, styles.tabActive] : styles.tab}>
-          <Text style={selectedTab == "Mensal" ? [styles.tabText, styles.tabTextActive] : styles.tabText}>Mensal</Text>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('Mensal')}
+          style={
+            selectedTab == 'Mensal'
+              ? [styles.tab, styles.tabActive]
+              : styles.tab
+          }
+        >
+          <Text
+            style={
+              selectedTab == 'Mensal'
+                ? [styles.tabText, styles.tabTextActive]
+                : styles.tabText
+            }
+          >
+            Mensal
+          </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.transactionHeader}>
         <Text style={styles.transactionTitle}>Transações</Text>
-        <TouchableOpacity onPress={() => router.push("/ver-tudo")}>
+        <TouchableOpacity onPress={() => router.push('/ver-tudo')}>
           <Text style={styles.viewAll}>Ver Tudo</Text>
         </TouchableOpacity>
       </View>
@@ -60,16 +126,18 @@ export default function App () {
               style={[
                 styles.dot,
                 {
-                  backgroundColor:
-                    item.type === 'saida' ? '#C40000' : '#5BA87F'
+                  backgroundColor: item.type === 'despesa' ? '#C40000' : '#5BA87F'
                 }
               ]}
             />
             <View style={styles.transactionInfo}>
-              <Text style={styles.transactionName}>{item.title}</Text>
-              <Text style={styles.transactionDate}>{item.date}</Text>
+              <Text style={styles.transactionName}>{item.description}</Text>
+              <Text style={styles.transactionDate}>{normalizeDate(item.date)}</Text>
             </View>
-            <Text style={styles.transactionAmount}>{item.type === "saida" ? "-" : "+"}{item.amount}</Text>
+            <Text style={styles.transactionAmount}>
+              {item.type === 'despesa' ? '-' : '+'}
+              {normalizeCurrency(item.price)}
+            </Text>
           </View>
         )}
       />

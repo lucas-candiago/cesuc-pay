@@ -32,3 +32,12 @@ export interface AuthContextData {
 export interface AuthProviderProps {
     children: ReactNode;
 }
+
+export interface Transaction {
+    id: string
+    description: string
+    type: string
+    date: string
+    price: number
+    category: string
+}

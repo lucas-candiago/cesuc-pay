@@ -7,8 +7,8 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import AuthContext from './contexts/AuthContext'
-import { useContext } from 'react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { normalizeCpfNumber } from './utils/functions'
 
 export default function LoginScreen () {
   const router = useRouter()
@@ -19,7 +19,7 @@ export default function LoginScreen () {
   const { login } = useContext(AuthContext)
 
   const handleCPF = (text: string) => {
-    setCPF(text)
+    setCPF(normalizeCpfNumber(text))
   }
 
   const handlePassword = (text: string) => {

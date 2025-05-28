@@ -6,9 +6,9 @@ import {
   StyleSheet
 } from 'react-native'
 import { useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import AuthContext from './contexts/AuthContext'
-import { useContext } from 'react'
+import { normalizeCpfNumber } from './utils/functions'
 
 export default function CadastroScreen () {
   const router = useRouter()
@@ -33,7 +33,7 @@ export default function CadastroScreen () {
   }
 
   const handleCPF = (text: string) => {
-    setCPF(text)
+    setCPF(normalizeCpfNumber(text))
   }
 
   const [registerErrorMsg, setRegisterErrorMsg] = useState<string | undefined>(

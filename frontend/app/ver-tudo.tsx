@@ -8,13 +8,29 @@ import {
 } from 'react-native'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DeleteModal from './components/DeleteModal'
-import { transactions } from './mocks/transactions'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axiosAPI from './services/axios'
+import { normalizeDate, normalizeCurrency } from './utils/functions'
+import { Transaction } from './types'
 
+async function getUser () {
+  return await AsyncStorage.getItem('userName')
+}
 
 export default function ExpensesScreen () {
   const router = useRouter()
+
+  const user = getUser()
+
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+
+  useEffect(() => {
+    axiosAPI
+      .get('transactions/all')
+      .then(res => setTransactions(res.data.transactions))
+  }, [])
 
   const [showModal, setShowModal] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -49,21 +65,21 @@ export default function ExpensesScreen () {
               style={[
                 styles.dot,
                 {
-                  backgroundColor:
-                    item.type === 'saida' ? '#C40000' : '#5BA87F'
+                  backgroundColor: item.type === 'despesa' ? '#C40000' : '#5BA87F'
                 }
               ]}
             />
             <View style={styles.transactionInfo}>
-              <Text style={styles.transactionName}>{item.title}</Text>
-              <Text style={styles.transactionDate}>{item.date}</Text>
+              <Text style={styles.transactionName}>{item.description}</Text>
+              <Text style={styles.transactionDate}>{normalizeDate(item.date)}</Text>
               <Text
                 style={[
                   styles.transactionAmount,
-                  { color: item.type === 'saida' ? '#C40000' : '#5BA87F' }
+                  { color: item.type === 'despesa' ? '#C40000' : '#5BA87F' }
                 ]}
               >
-                {item.type === "saida" ? "-" : "+"}{item.amount}
+                {item.type === 'despesa' ? '-' : '+'}
+                {normalizeCurrency(item.price)}
               </Text>
             </View>
             <View style={styles.actions}>
@@ -73,7 +89,10 @@ export default function ExpensesScreen () {
               >
                 <Feather name='edit-2' size={16} color='#5BA87F' />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton}  onPress={() => handleDeletePress(item.id)}>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => handleDeletePress(item.id)}
+              >
                 <Feather name='trash' size={16} color='#C40000' />
               </TouchableOpacity>
             </View>
