@@ -1,9 +1,11 @@
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import AuthContext from './contexts/AuthContext'
@@ -41,55 +43,52 @@ export default function LoginScreen () {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.returnText} onPress={() => router.back()}>
-        Voltar
-      </Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.returnText} onPress={() => router.back()}>
+          Voltar
+        </Text>
 
-      <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>Login</Text>
 
-      <Text style={styles.label}>CPF</Text>
-      <TextInput
-        style={styles.input}
-        value={cpf}
-        onChangeText={handleCPF}
-        placeholder='000.000.000-00'
-        keyboardType='numeric'
-        placeholderTextColor='#aaa'
-      />
+        <Text style={styles.label}>CPF</Text>
+        <TextInput
+          style={styles.input}
+          value={cpf}
+          onChangeText={handleCPF}
+          placeholder='000.000.000-00'
+          keyboardType='numeric'
+          placeholderTextColor='#aaa'
+        />
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={handlePassword}
-        placeholder='************'
-        secureTextEntry
-        placeholderTextColor='#aaa'
-      />
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={handlePassword}
+          placeholder='************'
+          secureTextEntry
+          placeholderTextColor='#aaa'
+        />
 
-      <TouchableOpacity onPress={() => router.push('/recuperar-senha')}>
-        <Text style={styles.forgot}>Esqueceu sua senha?</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/recuperar-senha')}>
+          <Text style={styles.forgot}>Esqueceu sua senha?</Text>
+        </TouchableOpacity>
 
-      {loginErrorMsg && (
-        <Text style={{ color: 'red' }}>{loginErrorMsg}</Text>
-      )}
+        {loginErrorMsg && <Text style={{ color: 'red' }}>{loginErrorMsg}</Text>}
 
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={handleSubmit}
-      >
-        <Text style={styles.loginText}>Entrar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleSubmit}>
+          <Text style={styles.loginText}>Entrar</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.registerBtn}
-        onPress={() => router.push('/cadastro')}
-      >
-        <Text style={styles.registerText}>Cadastrar-se</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          style={styles.registerBtn}
+          onPress={() => router.push('/cadastro')}
+        >
+          <Text style={styles.registerText}>Cadastrar-se</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   )
 }
 

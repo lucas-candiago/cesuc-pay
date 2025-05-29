@@ -1,9 +1,11 @@
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useState, useContext } from 'react'
@@ -53,7 +55,8 @@ export default function CadastroScreen () {
   }
 
   return (
-      <View style={styles.container}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView style={styles.container}>
         <Text style={styles.returnText} onPress={() => router.back()}>
           Voltar
         </Text>
@@ -98,15 +101,15 @@ export default function CadastroScreen () {
           placeholderTextColor='#aaa'
         />
 
-        {registerErrorMsg && <Text style={{ color: 'red' }}>{registerErrorMsg}</Text>}
+        {registerErrorMsg && (
+          <Text style={{ color: 'red' }}>{registerErrorMsg}</Text>
+        )}
 
-        <TouchableOpacity
-          style={styles.registerBtn}
-          onPress={handleSubmit}
-        >
+        <TouchableOpacity style={styles.registerBtn} onPress={handleSubmit}>
           <Text style={styles.registerText}>Cadastrar</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   )
 }
 

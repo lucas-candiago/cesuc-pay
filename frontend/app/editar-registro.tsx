@@ -1,10 +1,12 @@
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Platform
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView
 } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -19,7 +21,7 @@ import AuthContext from './contexts/AuthContext'
 export default function EditScreen () {
   const router = useRouter()
 
-  const {fetchTransactions} = useContext(AuthContext)
+  const { fetchTransactions } = useContext(AuthContext)
 
   const { transactionId } = useLocalSearchParams<{ transactionId?: string }>()
 
@@ -65,97 +67,102 @@ export default function EditScreen () {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.returnText} onPress={() => router.back()}>
-        <Ionicons name='chevron-back' size={24} />
-        <Text>Voltar</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.title}>Editar Transação</Text>
-
-      <Text style={styles.label}>Descrição</Text>
-      <TextInput
-        style={styles.input}
-        placeholder='Iphone 16'
-        placeholderTextColor='#aaa'
-        value={description}
-        onChangeText={setDescription}
-      />
-
-      <Text style={styles.label}>Data</Text>
-      <TouchableOpacity
-        style={styles.input}
-        onPress={() => setShowDatePicker(!showDatePicker)}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps='handled'
       >
-        <Text style={{ color: '#333' }}>
-          {date.toLocaleDateString('pt-BR')}
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.returnText}
+          onPress={() => router.back()}
+        >
+          <Ionicons name='chevron-back' size={24} />
+          <Text>Voltar</Text>
+        </TouchableOpacity>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode='date'
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={(event, selectedDate) => {
-            const currentDate = selectedDate || date
-            setShowDatePicker(Platform.OS === 'ios')
-            setDate(currentDate)
-          }}
+        <Text style={styles.title}>Editar Transação</Text>
+
+        <Text style={styles.label}>Descrição</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Iphone 16'
+          placeholderTextColor='#aaa'
+          value={description}
+          onChangeText={setDescription}
         />
-      )}
 
-      <Text style={styles.label}>Categoria</Text>
-      <DropDownPicker
-        open={openCategory}
-        value={category}
-        items={categoryItems}
-        setOpen={setOpenCategory}
-        setValue={setCategory}
-        setItems={setCategoryItems}
-        placeholder='Selecione uma categoria'
-        style={styles.dropdown}
-        dropDownContainerStyle={styles.dropdownContainer}
-        zIndex={openCategory ? 3000 : 1000}
-        zIndexInverse={1000}
-      />
+        <Text style={styles.label}>Data</Text>
+        <TouchableOpacity
+          style={styles.input}
+          onPress={() => setShowDatePicker(!showDatePicker)}
+        >
+          <Text style={{ color: '#333' }}>
+            {date.toLocaleDateString('pt-BR')}
+          </Text>
+        </TouchableOpacity>
 
-      <Text style={styles.label}>Tipo</Text>
-      <DropDownPicker
-        open={openType}
-        value={type}
-        items={typeItems}
-        setOpen={setOpenType}
-        setValue={setType}
-        setItems={setTypeItems}
-        placeholder='Selecione o tipo'
-        style={styles.dropdown}
-        dropDownContainerStyle={styles.dropdownContainer}
-        zIndex={openType ? 3000 : 1000}
-        zIndexInverse={1000}
-      />
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode='date'
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            onChange={(event, selectedDate) => {
+              const currentDate = selectedDate || date
+              setShowDatePicker(Platform.OS === 'ios')
+              setDate(currentDate)
+            }}
+          />
+        )}
 
-      <Text style={styles.label}>Valor</Text>
-      <TextInput
-        style={styles.input}
-        placeholder='R$ 0,00'
-        placeholderTextColor='#aaa'
-        keyboardType='numeric'
-        value={price}
-        onChangeText={setPrice}
-      />
+        <Text style={styles.label}>Categoria</Text>
+        <DropDownPicker
+          open={openCategory}
+          value={category}
+          items={categoryItems}
+          setOpen={setOpenCategory}
+          setValue={setCategory}
+          setItems={setCategoryItems}
+          placeholder='Selecione uma categoria'
+          style={styles.dropdown}
+          dropDownContainerStyle={styles.dropdownContainer}
+          zIndex={openCategory ? 3000 : 1000}
+          zIndexInverse={1000}
+        />
 
-      <TouchableOpacity style={styles.createBtn} onPress={handleSubmit}>
-        <Text style={styles.createText}>Editar</Text>
-      </TouchableOpacity>
+        <Text style={styles.label}>Tipo</Text>
+        <DropDownPicker
+          open={openType}
+          value={type}
+          items={typeItems}
+          setOpen={setOpenType}
+          setValue={setType}
+          setItems={setTypeItems}
+          placeholder='Selecione o tipo'
+          style={styles.dropdown}
+          dropDownContainerStyle={styles.dropdownContainer}
+          zIndex={openType ? 3000 : 1000}
+          zIndexInverse={1000}
+        />
 
-      <TouchableOpacity
-        style={styles.backBtn}
-        onPress={() => router.back()}
-      >
-        <Text style={styles.backText}>Voltar</Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={styles.label}>Valor</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='R$ 0,00'
+          placeholderTextColor='#aaa'
+          keyboardType='numeric'
+          value={price}
+          onChangeText={setPrice}
+        />
+
+        <TouchableOpacity style={styles.createBtn} onPress={handleSubmit}>
+          <Text style={styles.createText}>Editar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Text style={styles.backText}>Voltar</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   )
 }
 
