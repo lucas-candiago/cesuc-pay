@@ -68,6 +68,9 @@ export default function App () {
     filterTransactions()
   }, [selectedTab, transactions])
 
+  useEffect(() => {
+    fetchTransactions()
+  }, [])
 
   return (
     <View style={styles.container}>
