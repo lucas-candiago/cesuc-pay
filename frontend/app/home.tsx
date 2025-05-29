@@ -22,9 +22,52 @@ export default function App () {
 
   const user = getUser()
 
-  const { transactions, total } = useContext(AuthContext)
+  const { transactions, total, fetchTransactions } = useContext(AuthContext)
+  const [selectedTransactions, setSelectedTransactions] = useState(transactions)
 
-  const [selectedTab, setSelectedTab] = useState('Hoje')
+  const [selectedTab, setSelectedTab] = useState('Mensal')
+
+  const filterTransactions = () => {
+    const now = new Date()
+
+    const startOfWeek = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - now.getDay()
+    )
+
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+    if (selectedTab === 'Mensal') {
+      setSelectedTransactions(
+        transactions.filter(item => {
+          const itemDate = new Date(item.date)
+          return itemDate >= startOfMonth
+        })
+      )
+    } else if (selectedTab === 'Semanal') {
+      setSelectedTransactions(
+        transactions.filter(item => {
+          const itemDate = new Date(item.date)
+          return itemDate >= startOfWeek
+        })
+      )
+    } else {
+      setSelectedTransactions(
+        transactions.filter(item => {
+          const itemDate = new Date(item.date)
+          return itemDate.toDateString() === today.toDateString()
+        })
+      )
+    }
+  }
+
+  useEffect(() => {
+    filterTransactions()
+  }, [selectedTab, transactions])
+
 
   return (
     <View style={styles.container}>
@@ -45,21 +88,24 @@ export default function App () {
 
       <View style={styles.tabsContainer}>
         <TouchableOpacity
-          onPress={() => setSelectedTab('Hoje')}
+          onPress={() => setSelectedTab('Mensal')}
           style={
-            selectedTab == 'Hoje' ? [styles.tab, styles.tabActive] : styles.tab
+            selectedTab == 'Mensal'
+              ? [styles.tab, styles.tabActive]
+              : styles.tab
           }
         >
           <Text
             style={
-              selectedTab == 'Hoje'
+              selectedTab == 'Mensal'
                 ? [styles.tabText, styles.tabTextActive]
                 : styles.tabText
             }
           >
-            Hoje
+            Mensal
           </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => setSelectedTab('Semanal')}
           style={
@@ -78,22 +124,21 @@ export default function App () {
             Semanal
           </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          onPress={() => setSelectedTab('Mensal')}
+          onPress={() => setSelectedTab('Hoje')}
           style={
-            selectedTab == 'Mensal'
-              ? [styles.tab, styles.tabActive]
-              : styles.tab
+            selectedTab == 'Hoje' ? [styles.tab, styles.tabActive] : styles.tab
           }
         >
           <Text
             style={
-              selectedTab == 'Mensal'
+              selectedTab == 'Hoje'
                 ? [styles.tabText, styles.tabTextActive]
                 : styles.tabText
             }
           >
-            Mensal
+            Hoje
           </Text>
         </TouchableOpacity>
       </View>
@@ -106,7 +151,7 @@ export default function App () {
       </View>
 
       <FlatList
-        data={transactions}
+        data={selectedTransactions}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.transactionItem}>
@@ -114,13 +159,16 @@ export default function App () {
               style={[
                 styles.dot,
                 {
-                  backgroundColor: item.type === 'despesa' ? '#C40000' : '#5BA87F'
+                  backgroundColor:
+                    item.type === 'despesa' ? '#C40000' : '#5BA87F'
                 }
               ]}
             />
             <View style={styles.transactionInfo}>
               <Text style={styles.transactionName}>{item.description}</Text>
-              <Text style={styles.transactionDate}>{normalizeDate(item.date)}</Text>
+              <Text style={styles.transactionDate}>
+                {normalizeDate(item.date)}
+              </Text>
             </View>
             <Text style={styles.transactionAmount}>
               {item.type === 'despesa' ? '-' : '+'}
