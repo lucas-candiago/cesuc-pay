@@ -27,6 +27,9 @@ export interface AuthContextData {
     logout: () => void
     change: (data: ChangeData) => Promise<void>
     register: (data: RegisterData) => Promise<void>
+    fetchTransactions: () => Promise<void>
+    transactions: Transaction[]
+    total: number
 }
 
 export interface AuthProviderProps {

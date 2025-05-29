@@ -13,9 +13,13 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import { Ionicons } from '@expo/vector-icons'
 import axiosAPI from './services/axios'
 import { categories } from './mocks/categories'
+import { useContext } from 'react'
+import AuthContext from './contexts/AuthContext'
 
 export default function AddScreen () {
   const router = useRouter()
+
+  const {fetchTransactions} = useContext(AuthContext) 
 
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
@@ -43,6 +47,7 @@ export default function AddScreen () {
     })
 
     if (res.status == 201) {
+      fetchTransactions()
       router.push('/home')
     }
   }

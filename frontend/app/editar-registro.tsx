@@ -6,27 +6,31 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { Ionicons } from '@expo/vector-icons'
+import axiosAPI from './services/axios'
+import { categories } from './mocks/categories'
+import { useContext } from 'react'
+import AuthContext from './contexts/AuthContext'
 
 export default function EditScreen () {
   const router = useRouter()
 
+  const {fetchTransactions} = useContext(AuthContext)
+
+  const { transactionId } = useLocalSearchParams<{ transactionId?: string }>()
+
   const [description, setDescription] = useState('')
-  const [value, setValue] = useState('')
+  const [price, setPrice] = useState('')
   const [date, setDate] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
 
   const [openCategory, setOpenCategory] = useState(false)
   const [category, setCategory] = useState(null)
-  const [categoryItems, setCategoryItems] = useState([
-    { label: 'Roupas', value: 'roupas' },
-    { label: 'Comida', value: 'comida' },
-    { label: 'Transporte', value: 'transporte' }
-  ])
+  const [categoryItems, setCategoryItems] = useState(categories)
 
   const [openType, setOpenType] = useState(false)
   const [type, setType] = useState(null)
@@ -34,6 +38,31 @@ export default function EditScreen () {
     { label: 'Despesa', value: 'despesa' },
     { label: 'Receita', value: 'receita' }
   ])
+
+  useEffect(() => {
+    axiosAPI.get(`transactions/${transactionId}`).then(res => {
+      setDescription(res.data.description)
+      setDate(new Date(res.data.date))
+      setCategory(res.data.category)
+      setType(res.data.type)
+      setPrice(res.data.price)
+    })
+  }, [transactionId])
+
+  const handleSubmit = async () => {
+    const res = await axiosAPI.put(`transactions/edit/${transactionId}/`, {
+      description,
+      type,
+      date,
+      category,
+      price
+    })
+
+    if (res.status == 200) {
+      fetchTransactions()
+      router.back()
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -112,12 +141,12 @@ export default function EditScreen () {
         placeholder='R$ 0,00'
         placeholderTextColor='#aaa'
         keyboardType='numeric'
-        value={value}
-        onChangeText={setValue}
+        value={price}
+        onChangeText={setPrice}
       />
 
-      <TouchableOpacity style={styles.createBtn}>
-        <Text style={styles.createText}>Adicionar</Text>
+      <TouchableOpacity style={styles.createBtn} onPress={handleSubmit}>
+        <Text style={styles.createText}>Editar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

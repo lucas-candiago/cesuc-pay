@@ -9,9 +9,9 @@ import {
 import { Ionicons, Feather } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import axiosAPI from './services/axios'
 import { normalizeDate, normalizeCurrency } from './utils/functions'
-import { Transaction } from './types'
+import { useContext } from 'react'
+import AuthContext from './contexts/AuthContext'
 
 async function getUser () {
   return await AsyncStorage.getItem('userName')
@@ -22,21 +22,9 @@ export default function App () {
 
   const user = getUser()
 
+  const { transactions, total } = useContext(AuthContext)
+
   const [selectedTab, setSelectedTab] = useState('Hoje')
-
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [total, setTotal] = useState(0)
-
-  useEffect(() => {
-    axiosAPI.get("transactions/all").then(res => {
-      let tot = 0
-      res.data.transactions.map((transaction: Transaction) => {
-        if (transaction.type == 'despesa') tot += Number(transaction.price)
-      })
-      setTransactions(res.data.transactions)
-      setTotal(tot)
-  })
-  }, [])
 
   return (
     <View style={styles.container}>

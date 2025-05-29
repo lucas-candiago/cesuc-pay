@@ -10,27 +10,16 @@ import { Feather, Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import { useState, useEffect } from 'react'
 import DeleteModal from './components/DeleteModal'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import axiosAPI from './services/axios'
 import { normalizeDate, normalizeCurrency } from './utils/functions'
-import { Transaction } from './types'
+import { useContext } from 'react'
+import AuthContext from './contexts/AuthContext'
 
-async function getUser () {
-  return await AsyncStorage.getItem('userName')
-}
 
 export default function ExpensesScreen () {
   const router = useRouter()
 
-  const user = getUser()
-
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-
-  useEffect(() => {
-    axiosAPI
-      .get('transactions/all')
-      .then(res => setTransactions(res.data.transactions))
-  }, [])
+  const { transactions, fetchTransactions } = useContext(AuthContext)
 
   const [showModal, setShowModal] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -40,8 +29,11 @@ export default function ExpensesScreen () {
     setShowModal(true)
   }
 
-  const confirmDelete = () => {
-    console.log('Excluído id:', selectedId)
+  const confirmDelete = async () => {
+    const res = await axiosAPI.delete(`transactions/delete/${selectedId}/`)
+    if (res.status === 200) {
+      fetchTransactions()
+    }  
     setShowModal(false)
     setSelectedId(null)
   }
@@ -83,12 +75,12 @@ export default function ExpensesScreen () {
               </Text>
             </View>
             <View style={styles.actions}>
-              <TouchableOpacity
+                <TouchableOpacity
                 style={styles.actionButton}
-                onPress={() => router.push('/editar-registro')}
-              >
+                onPress={() => router.push({ pathname: '/editar-registro', params: { transactionId: item.id } })}
+                >
                 <Feather name='edit-2' size={16} color='#5BA87F' />
-              </TouchableOpacity>
+                </TouchableOpacity>
               <TouchableOpacity
                 style={styles.actionButton}
                 onPress={() => handleDeletePress(item.id)}

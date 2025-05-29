@@ -52,4 +52,81 @@ router.get('/all', verifyToken, async (req, res) => {
   }
 })
 
+router.delete('/delete/:id', verifyToken, async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const transaction = await Transaction.findById(id)
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' })
+    }
+    if (transaction.user.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Unauthorized' })
+    }
+    await Transaction.findByIdAndDelete(id)
+    res.status(200).json({ message: 'Transaction deleted successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Server error' })
+  }
+})
+
+router.put('/edit/:id', verifyToken, async (req, res) => {
+  const { id } = req.params
+  const { description, date, category, type, price } = req.body
+
+  try {
+    const transaction = await Transaction.findById(id)
+
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' })
+    }
+
+    if (transaction.user.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Unauthorized' })
+    }
+
+    transaction.description = description
+    transaction.date = date
+    transaction.category = category
+    transaction.type = type
+    transaction.price = price
+
+    await transaction.save()
+    res.status(200).json({ message: 'Transaction updated successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Server error' })
+  }
+})
+
+// Get a transaction by ID
+router.get('/:id', verifyToken, async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const transaction = await Transaction.findById(id)
+
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' })
+    }
+
+    if (transaction.user.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Unauthorized' })
+    }
+
+    res.status(200).json({
+      id: transaction.id,
+      description: transaction.description,
+      date: transaction.date,
+      category: transaction.category,
+      type: transaction.type,
+      price: transaction.price
+    })
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' })
+  }
+})
+
 module.exports = router
