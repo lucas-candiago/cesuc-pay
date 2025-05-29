@@ -9,6 +9,7 @@
 - React Native
 - Expo
 - TypeScript
+- Express
 
 ---
 
@@ -27,6 +28,13 @@ Este projeto utiliza o **Expo**, que permite rodar o app diretamente no seu celu
 
 ---
 
+## Backend
+
+- O backend foi feito em node.js com o framework express, todos os arquivos estão na pasta /backend.
+- Os dados estão armazenados em um banco no MongoDB
+- Foi feito o deploy do back gratuitamente no Railway, por meio da Dockerfile.
+- O backend está funcionando pela url: https://cesuc-pay-production.up.railway.app/
+
 ## 🛠️ Passo a passo para rodar o app
 
 ### 1. Clone o repositório
@@ -37,6 +45,10 @@ cd cesuc-pay
 ```
 
 ### 2. Instale as dependências
+
+```bash
+cd frontend
+```
 
 ```bash
 npm install
