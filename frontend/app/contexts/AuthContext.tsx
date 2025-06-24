@@ -100,15 +100,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [total, setTotal] = useState(0)
+  const [totalCosts, setTotalCosts] = useState(0)
+  const [totalGains, setTotalGains] = useState(0)
   
   const fetchTransactions = async () => {
     axiosAPI.get("transactions/all").then(res => {
       let tot = 0
+      let totCosts = 0
+      let totGains = 0
       res.data.transactions.map((transaction: Transaction) => {
-        if (transaction.type == 'despesa') tot += Number(transaction.price)
+        if (transaction.type == 'despesa') {
+          totCosts += Number(transaction.price)
+          tot = tot - Number(transaction.price)
+        } 
+        if (transaction.type == 'receita') {
+          totGains += Number(transaction.price)
+          tot = tot + Number(transaction.price)
+        }
       })
       setTransactions(res.data.transactions)
       setTotal(tot)
+      setTotalCosts(totCosts)
+      setTotalGains(totGains)
   })
   }
 
@@ -117,7 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ login, logout, change, register, transactions, total, fetchTransactions }}>
+    <AuthContext.Provider value={{ login, logout, change, register, transactions, total, totalCosts, totalGains, fetchTransactions }}>
       {children}
     </AuthContext.Provider>
   )

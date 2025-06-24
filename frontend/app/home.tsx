@@ -22,7 +22,7 @@ export default function App () {
 
   const user = getUser()
 
-  const { transactions, total, fetchTransactions } = useContext(AuthContext)
+  const { transactions, total, totalCosts, totalGains, fetchTransactions } = useContext(AuthContext)
   const [selectedTransactions, setSelectedTransactions] = useState(transactions)
 
   const [selectedTab, setSelectedTab] = useState('Mensal')
@@ -85,8 +85,10 @@ export default function App () {
       </View>
 
       <View style={styles.totalContainer}>
-        <Text style={styles.totalLabel}>Total Gasto</Text>
+        <Text style={styles.totalLabel}>Saldo</Text>
         <Text style={styles.totalValue}>{normalizeCurrency(total)}</Text>
+        <Text style={styles.totalLabel}>Gastos: {normalizeCurrency(totalCosts)}</Text>
+        <Text style={styles.totalLabel}>Ganhos: {normalizeCurrency(totalGains)}</Text>
       </View>
 
       <View style={styles.tabsContainer}>

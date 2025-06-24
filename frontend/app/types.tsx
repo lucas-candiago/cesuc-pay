@@ -30,6 +30,8 @@ export interface AuthContextData {
     fetchTransactions: () => Promise<void>
     transactions: Transaction[]
     total: number
+    totalCosts: number
+    totalGains: number
 }
 
 export interface AuthProviderProps {
