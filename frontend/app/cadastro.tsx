@@ -5,12 +5,14 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
+  View
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useState, useContext } from 'react'
 import AuthContext from './contexts/AuthContext'
 import { normalizeCpfNumber } from './utils/functions'
+import { Feather } from '@expo/vector-icons'
 
 export default function CadastroScreen () {
   const router = useRouter()
@@ -41,6 +43,7 @@ export default function CadastroScreen () {
   const [registerErrorMsg, setRegisterErrorMsg] = useState<string | undefined>(
     undefined
   )
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = () => {
     const registerData = {
@@ -50,8 +53,12 @@ export default function CadastroScreen () {
       cpf,
       setErrorMsg: setRegisterErrorMsg
     }
-
-    register(registerData)
+    setRegisterErrorMsg(undefined)
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+      register(registerData)
+    }, 1500)
   }
 
   return (
@@ -106,7 +113,19 @@ export default function CadastroScreen () {
         )}
 
         <TouchableOpacity style={styles.registerBtn} onPress={handleSubmit}>
-          <Text style={styles.registerText}>Cadastrar</Text>
+          {isLoading ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather
+                name='loader'
+                size={16}
+                color='#fff'
+                style={{ marginRight: 12 }}
+              />
+              <Text style={styles.registerText}>Cadastrando...</Text>
+            </View>
+          ) : (
+            <Text style={styles.registerText}>Cadastrar</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </TouchableWithoutFeedback>

@@ -22,10 +22,11 @@ export default function App () {
 
   const user = getUser()
 
-  const { transactions, total, totalCosts, totalGains, fetchTransactions } = useContext(AuthContext)
+  const { transactions, total, totalCosts, totalGains, fetchTransactions, logout } = useContext(AuthContext)
   const [selectedTransactions, setSelectedTransactions] = useState(transactions)
-
   const [selectedTab, setSelectedTab] = useState('Mensal')
+  const [isLoading, setIsLoading] = useState(true)
+  const [showDropdown, setShowDropdown] = useState(false)
 
   const filterTransactions = () => {
     const now = new Date()
@@ -65,12 +66,25 @@ export default function App () {
   }
 
   useEffect(() => {
+    setIsLoading(true)
+    fetchTransactions()
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 200)
+  }, [])
+
+  useEffect(() => {
     filterTransactions()
   }, [selectedTab, transactions])
 
-  useEffect(() => {
-    fetchTransactions()
-  }, [])
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}> 
+        <Feather name='loader' size={32} color='#2e5748' style={{ marginBottom: 16 }} />
+        <Text style={{ fontSize: 18, color: '#2e5748' }}>Carregando dados...</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -79,9 +93,18 @@ export default function App () {
           <Text style={styles.greeting}>Olá, {user}</Text>
           <Text style={styles.title}>Início</Text>
         </View>
-        <TouchableOpacity style={styles.profileIcon}>
-          <Ionicons name='person-outline' size={24} color='black' />
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.profileIcon} onPress={() => setShowDropdown(!showDropdown)}>
+            <Ionicons name='person-outline' size={24} color='black' />
+          </TouchableOpacity>
+          {showDropdown && (
+            <View style={styles.dropdownMenu}>
+              <TouchableOpacity onPress={() => { logout(); setShowDropdown(false); router.replace('/login') }}>
+                <Text style={styles.dropdownItem}>Sair</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </View>
 
       <View style={styles.totalContainer}>
@@ -316,5 +339,26 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 5
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 40,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 999,
+    minWidth: 80,
+    paddingVertical: 8
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: '#2e5748'
   }
 })

@@ -6,7 +6,8 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
+  View
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -17,6 +18,7 @@ import axiosAPI from './services/axios'
 import { categories } from './mocks/categories'
 import { useContext } from 'react'
 import AuthContext from './contexts/AuthContext'
+import { Feather } from '@expo/vector-icons'
 
 export default function AddScreen () {
   const router = useRouter()
@@ -39,18 +41,24 @@ export default function AddScreen () {
     { label: 'Receita', value: 'receita' }
   ])
 
-  const handleSubmit = async () => {
-    const res = await axiosAPI.post('transactions/add/', {
-      description,
-      type,
-      date,
-      category,
-      price
-    })
+  const [isLoading, setIsLoading] = useState(false)
 
-    if (res.status == 201) {
-      fetchTransactions()
-      router.push('/home')
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    try {
+      const res = await axiosAPI.post('transactions/add/', {
+        description,
+        type,
+        date,
+        category,
+        price
+      })
+      if (res.status == 201) {
+        fetchTransactions()
+        router.push('/home')
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -142,8 +150,15 @@ export default function AddScreen () {
             onChangeText={setPrice}
           />
 
-          <TouchableOpacity style={styles.createBtn} onPress={handleSubmit}>
-            <Text style={styles.createText}>Adicionar</Text>
+          <TouchableOpacity style={styles.createBtn} onPress={handleSubmit} disabled={isLoading}>
+            {isLoading ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Feather name='loader' size={18} color='#fff' style={{ marginRight: 10 }} />
+                <Text style={styles.createText}>Adicionando...</Text>
+              </View>
+            ) : (
+              <Text style={styles.createText}>Adicionar</Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

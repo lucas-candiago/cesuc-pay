@@ -6,7 +6,8 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
+  View
 } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -17,6 +18,7 @@ import axiosAPI from './services/axios'
 import { categories } from './mocks/categories'
 import { useContext } from 'react'
 import AuthContext from './contexts/AuthContext'
+import { Feather } from '@expo/vector-icons'
 
 export default function EditScreen () {
   const router = useRouter()
@@ -41,6 +43,8 @@ export default function EditScreen () {
     { label: 'Receita', value: 'receita' }
   ])
 
+  const [isLoading, setIsLoading] = useState(false)
+
   useEffect(() => {
     axiosAPI.get(`transactions/${transactionId}`).then(res => {
       setDescription(res.data.description)
@@ -52,17 +56,21 @@ export default function EditScreen () {
   }, [transactionId])
 
   const handleSubmit = async () => {
-    const res = await axiosAPI.put(`transactions/edit/${transactionId}/`, {
-      description,
-      type,
-      date,
-      category,
-      price
-    })
-
-    if (res.status == 200) {
-      fetchTransactions()
-      router.back()
+    setIsLoading(true)
+    try {
+      const res = await axiosAPI.put(`transactions/edit/${transactionId}/`, {
+        description,
+        type,
+        date,
+        category,
+        price
+      })
+      if (res.status == 200) {
+        fetchTransactions()
+        router.back()
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -154,8 +162,15 @@ export default function EditScreen () {
           onChangeText={setPrice}
         />
 
-        <TouchableOpacity style={styles.createBtn} onPress={handleSubmit}>
-          <Text style={styles.createText}>Editar</Text>
+        <TouchableOpacity style={styles.createBtn} onPress={handleSubmit} disabled={isLoading}>
+          {isLoading ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather name='loader' size={18} color='#fff' style={{ marginRight: 10 }} />
+              <Text style={styles.createText}>Salvando alterações...</Text>
+            </View>
+          ) : (
+            <Text style={styles.createText}>Editar</Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>

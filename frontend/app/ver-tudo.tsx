@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import DeleteModal from './components/DeleteModal'
 import axiosAPI from './services/axios'
 import { normalizeDate, normalizeCurrency } from './utils/functions'

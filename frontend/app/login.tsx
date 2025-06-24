@@ -5,12 +5,14 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView
+  ScrollView,
+  View
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import AuthContext from './contexts/AuthContext'
 import { useContext, useState } from 'react'
 import { normalizeCpfNumber } from './utils/functions'
+import { Feather } from '@expo/vector-icons'
 
 export default function LoginScreen () {
   const router = useRouter()
@@ -32,13 +34,21 @@ export default function LoginScreen () {
     undefined
   )
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const handleSubmit = () => {
     const loginData = {
       cpf,
       password,
       setErrorMsg: setLoginErrorMsg
     }
-
+    setLoginErrorMsg(undefined)
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+      login(loginData)
+    }, 1500)
+    return
     login(loginData)
   }
 
@@ -48,9 +58,7 @@ export default function LoginScreen () {
         <Text style={styles.returnText} onPress={() => router.back()}>
           Voltar
         </Text>
-
         <Text style={styles.title}>Login</Text>
-
         <Text style={styles.label}>CPF</Text>
         <TextInput
           style={styles.input}
@@ -60,7 +68,6 @@ export default function LoginScreen () {
           keyboardType='numeric'
           placeholderTextColor='#aaa'
         />
-
         <Text style={styles.label}>Senha</Text>
         <TextInput
           style={styles.input}
@@ -70,17 +77,27 @@ export default function LoginScreen () {
           secureTextEntry
           placeholderTextColor='#aaa'
         />
-
         <TouchableOpacity onPress={() => router.push('/recuperar-senha')}>
           <Text style={styles.forgot}>Esqueceu sua senha?</Text>
         </TouchableOpacity>
-
         {loginErrorMsg && <Text style={{ color: 'red' }}>{loginErrorMsg}</Text>}
-
         <TouchableOpacity style={styles.loginBtn} onPress={handleSubmit}>
-          <Text style={styles.loginText}>Entrar</Text>
+          {isLoading ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Feather
+                name='loader'
+                size={16}
+                color='#fff'
+                style={{ marginRight: 5 }}
+              />
+              <Text style={styles.loadingText}>
+                Carregando...
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.loginText}>Entrar</Text>
+          )}
         </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.registerBtn}
           onPress={() => router.push('/cadastro')}
@@ -136,6 +153,11 @@ const styles = StyleSheet.create({
   loginText: {
     color: '#fff',
     fontSize: 16
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#fff',
+    marginLeft: 2
   },
   registerBtn: {
     borderWidth: 1,
