@@ -4,7 +4,7 @@
     "slug": "cesuc-pay-app",
     "version": "1.0.0",
      "extra": {
-      "API_URL": "https://cesuc-pay-production.up.railway.app/"
+      "API_URL": "https://cesuc-pay.onrender.com/"
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

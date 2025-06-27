@@ -32,8 +32,8 @@ Este projeto utiliza o **Expo**, que permite rodar o app diretamente no seu celu
 
 - O backend foi feito em node.js com o framework express, todos os arquivos estão na pasta /backend.
 - Os dados estão armazenados em um banco no MongoDB
-- Foi feito o deploy do back gratuitamente no Railway, por meio da Dockerfile.
-- O backend está funcionando pela url: https://cesuc-pay-production.up.railway.app/
+- Foi feito o deploy do back gratuitamente no Render, por meio da Dockerfile.
+- O backend está funcionando pela url: https://cesuc-pay.onrender.com/
 
 ## 🛠️ Passo a passo para rodar o app
 
